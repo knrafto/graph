@@ -4,7 +4,7 @@ import itertools
 class Tree:
     def __init__(self, root, branches=()):
         self.root = root
-        self.branches = branches
+        self.branches = list(branches)
 
     def __repr__(self):
         if not self.branches:
@@ -68,7 +68,7 @@ class Graph:
                 yield self.spanning_tree(v, visited)
 
     def ccs(self):
-        return (t.postorder() for t in self.spanning_forest())
+        return [list(t.postorder()) for t in self.spanning_forest()]
 
     def linearize(self):
         for t in self.spanning_forest():
@@ -82,8 +82,8 @@ class Graph:
         return all(post[u] < post[v] for u, v in self.edges())
 
     def sccs(self):
-        return (t.postorder()
-            for t in self.transpose().spanning_forest(self.linearize()))
+        return [list(t.postorder())
+            for t in self.transpose().spanning_forest(self.linearize())]
 
     def condensation(self):
         contract = {}
