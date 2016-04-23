@@ -118,7 +118,7 @@ class Graph:
         return reversed(path)
 
 # from http://en.wikipedia.org/wiki/Strongly_connected_component
-g = Graph([
+test_graph = Graph([
     ('a', 'b'),
     ('b', 'e'),
     ('e', 'a'),
