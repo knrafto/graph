@@ -59,7 +59,7 @@ class Graph:
                 yield self.spanning_tree(v, visited)
 
     def ccs(self):
-        return (t.postorder() for t in self.spanning_forest()):
+        return (t.postorder() for t in self.spanning_forest())
 
     def linearize(self):
         for t in self.spanning_forest():
