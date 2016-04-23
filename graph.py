@@ -6,6 +6,12 @@ class Tree:
         self.root = root
         self.branches = branches
 
+    def __repr__(self):
+        if not self.branches:
+            return 'Tree({!r})'.format(self.root)
+        else:
+            return 'Tree({!r}, {!r})'.format(self.root, self.branches)
+
     def postorder(self):
         for b in self.branches:
             yield from b.postorder()
@@ -16,6 +22,9 @@ class Graph:
         self.G = collections.defaultdict(set)
         for u, v in edges:
             self.G[u].add(v)
+
+    def __repr__(self):
+        return 'Graph({!r})'.format(list(self.edges()))
 
     def vertices(self):
         return self.G.keys()
