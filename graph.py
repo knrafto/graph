@@ -68,24 +68,42 @@ class Graph:
                 yield self.spanning_tree(v, visited)
 
     def ccs(self):
+        """Return a list of connected components of the graph. Each conencted
+        component is a list of vertices.
+        """
         return [list(t.postorder()) for t in self.spanning_forest()]
 
     def linearize(self):
+        """Return a list of vertices in a topological order. The first vertex
+        will have no incoming edges, and the last vertix will have no outgoing
+        edges.
+        """
         for t in self.spanning_forest():
             yield from reversed(tuple(t.postorder()))
 
     def reachable(self, u, v):
+        """Return True iff there is a directed path from u to v."""
         return any(w == v for w in self.spanning_tree(u).postorder())
 
     def acyclic(self):
+        """Return True iff the graph is acyclic."""
         post = {v: i for i, v in enumerate(self.linearize())}
         return all(post[u] < post[v] for u, v in self.edges())
 
     def sccs(self):
+        """Return a list of strongly connected components of the graph. Each
+        strongly connected component is a list of vertices.
+        """
         return [list(t.postorder())
             for t in self.transpose().spanning_forest(self.linearize())]
 
     def condensation(self):
+        """Return directed acyclic graph. The vertices of the returned graph
+        are strongly connected components of the original graph (as sets of
+        vertices). The edges of the new graph are the edges of the new graph
+        as if all of the strongly connected components are "condensed" into a
+        single vertex.
+        """
         contract = {}
         for scc in self.sccs():
             S = frozenset(scc)
@@ -95,6 +113,21 @@ class Graph:
             for u, v in self.edges() if contract[u] != contract[v])
 
     def shortest_path(self, s, t, weight=lambda e: 1):
+        """Return the shortest path from s to t, as a list of vertices starting
+        with s and ending with t. If there is no path, return None.
+
+        The weight parameter is a function that takes an edge and returns the
+        length of that edge. One way to do this is with a dictionary:
+
+        edges = []
+        weights = {}
+        for u, v, weight in weighted_edges:
+            e = (u, v)
+            edges.append(e)
+            weights[e] = w
+        g = Graph(edges)
+        g.shortest_path(start, end, lambda e: weights[e])
+        """
         dist = {s: 0}
         prev = {s: None}
         Q = {s}
